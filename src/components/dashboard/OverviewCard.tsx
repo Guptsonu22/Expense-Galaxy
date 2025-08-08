@@ -48,7 +48,7 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
       return (
         <div className="p-2 bg-secondary rounded-md border border-border">
           <p className="font-bold">{`${payload[0].name}`}</p>
-          <p className="text-primary">{`$${payload[0].value.toFixed(2)}`}</p>
+          <p className="text-primary">{`₹${payload[0].value.toFixed(2)}`}</p>
         </div>
       );
     }
@@ -89,7 +89,7 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
             </div>
             <div className="text-right">
                 <p className="text-sm text-muted-foreground">Total Spent</p>
-                <p className="text-2xl font-bold font-mono">${totalExpenses.toFixed(2)}</p>
+                <p className="text-2xl font-bold font-mono">₹{totalExpenses.toFixed(2)}</p>
             </div>
         </div>
       </CardHeader>
@@ -130,5 +130,3 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
     </Card>
   )
 }
-
-    

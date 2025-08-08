@@ -148,7 +148,7 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
                           ) : 'Uncategorized'}
                         </TableCell>
                         <TableCell className="font-medium font-mono">
-                          ${expense.amount.toFixed(2)}
+                          ₹{expense.amount.toFixed(2)}
                         </TableCell>
                         <TableCell>{format(new Date(expense.date), 'MMM d, yyyy')}</TableCell>
                         <TableCell className="max-w-[200px] truncate text-muted-foreground">{expense.notes}</TableCell>
@@ -234,5 +234,3 @@ const buttonVariants = cva(
     },
   }
 )
-
-    
