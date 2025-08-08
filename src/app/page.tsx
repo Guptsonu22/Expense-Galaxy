@@ -112,6 +112,9 @@ function DashboardPage() {
             />
         </div>
       </main>
+      <footer className="py-6 px-4 sm:px-6 md:px-8 text-center text-muted-foreground text-sm">
+        <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
