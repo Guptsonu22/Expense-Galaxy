@@ -9,17 +9,20 @@ import CategoryManager from '@/components/dashboard/CategoryManager';
 import InsightsCard from '@/components/dashboard/InsightsCard';
 import ExpenseTable from '@/components/dashboard/ExpenseTable';
 import OverviewCard from '@/components/dashboard/OverviewCard';
+import BudgetCard from '@/components/dashboard/BudgetCard';
 import { Github, Linkedin, Heart } from 'lucide-react';
 import Link from 'next/link';
 
 function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [budget, setBudget] = useState<number>(1000);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     let storedExpenses: Expense[] = [];
     let storedCategories: Category[] = [];
+    let storedBudget: number | null = null;
 
     try {
       const expensesFromStorage = localStorage.getItem('expenses');
@@ -42,8 +45,18 @@ function DashboardPage() {
         console.error("Failed to parse categories from localStorage", error);
     }
     
+    try {
+      const budgetFromStorage = localStorage.getItem('budget');
+      if (budgetFromStorage) {
+        storedBudget = JSON.parse(budgetFromStorage);
+      }
+    } catch (error) {
+        console.error("Failed to parse budget from localStorage", error);
+    }
+
     setExpenses(storedExpenses.length > 0 ? storedExpenses : initialExpenses);
     setCategories(storedCategories.length > 0 ? storedCategories : defaultCategories);
+    setBudget(storedBudget !== null ? storedBudget : 1000);
     
     setIsMounted(true);
   }, []);
@@ -63,6 +76,12 @@ function DashboardPage() {
     }
   }, [categories, isMounted]);
 
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('budget', JSON.stringify(budget));
+    }
+  }, [budget, isMounted]);
+
 
   const handleAddExpense = (newExpense: Omit<Expense, 'id'>) => {
     setExpenses(prev => [{ ...newExpense, id: crypto.randomUUID() }, ...prev]);
@@ -77,6 +96,10 @@ function DashboardPage() {
     setCategories(prev => [...prev, categoryWithId]);
     return categoryWithId;
   };
+  
+  const handleSetBudget = (newBudget: number) => {
+    setBudget(newBudget);
+  };
 
   const currentMonthExpenses = useMemo(() => {
     if (!isMounted) return [];
@@ -88,6 +111,10 @@ function DashboardPage() {
       return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
     });
   }, [expenses, isMounted]);
+
+  const totalSpentThisMonth = useMemo(() => {
+    return currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  }, [currentMonthExpenses]);
 
   if (!isMounted) {
     return null; 
@@ -103,6 +130,11 @@ function DashboardPage() {
              <InsightsCard expenses={currentMonthExpenses} />
           </div>
           <div className="lg:col-span-1 flex flex-col gap-6">
+            <BudgetCard 
+              budget={budget}
+              totalSpent={totalSpentThisMonth}
+              onSetBudget={handleSetBudget}
+            />
             <CategoryManager categories={categories} onAddCategory={handleAddCategory} />
           </div>
         </div>
