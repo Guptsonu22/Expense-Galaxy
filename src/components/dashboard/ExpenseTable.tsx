@@ -33,6 +33,7 @@ import { MoreHorizontal, ArrowUpDown, Trash2, List } from 'lucide-react';
 import type { Expense, Category } from '@/types';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { getLucideIcon } from '@/lib/icon-utils';
 
 type ExpenseTableProps = {
   expenses: Expense[];
@@ -135,11 +136,13 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
                 {sortedExpenses.length > 0 ? (
                   sortedExpenses.map((expense) => {
                     const category = categoriesMap.get(expense.categoryId);
+                    const Icon = getLucideIcon(category?.icon);
                     return (
                       <TableRow key={expense.id} className="border-white/10">
                         <TableCell>
                           {category ? (
-                             <Badge variant="secondary" className="py-1">
+                             <Badge variant="secondary" className="py-1 gap-1.5 items-center">
+                              <Icon className="h-3 w-3" />
                               {category.name}
                             </Badge>
                           ) : 'Uncategorized'}
@@ -147,7 +150,7 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
                         <TableCell className="font-medium font-mono">
                           ${expense.amount.toFixed(2)}
                         </TableCell>
-                        <TableCell>{format(expense.date, 'MMM d, yyyy')}</TableCell>
+                        <TableCell>{format(new Date(expense.date), 'MMM d, yyyy')}</TableCell>
                         <TableCell className="max-w-[200px] truncate text-muted-foreground">{expense.notes}</TableCell>
                         <TableCell>
                           <DropdownMenu>
@@ -231,3 +234,5 @@ const buttonVariants = cva(
     },
   }
 )
+
+    

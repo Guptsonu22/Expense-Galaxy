@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Expense, Category } from "@/types"
 import { ChartPie, HandCoins } from "lucide-react"
+import { getLucideIcon } from "@/lib/icon-utils"
 
 type OverviewCardProps = {
   expenses: Expense[];
@@ -33,6 +34,7 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
     return Array.from(categorySpending.entries()).map(([categoryId, amount]) => ({
       name: categoriesMap.get(categoryId)?.name || 'Uncategorized',
       value: amount,
+      icon: getLucideIcon(categoriesMap.get(categoryId)?.icon),
     })).sort((a, b) => b.value - a.value);
   }, [expenses, categoriesMap]);
   
@@ -52,6 +54,27 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
     }
     return null;
   };
+
+  const renderLegend = (props: any) => {
+    const { payload } = props;
+    return (
+      <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mt-4">
+        {
+          payload.map((entry: any, index: number) => {
+            const { value, color } = entry;
+            const item = data[index];
+            const Icon = item.icon;
+            return (
+              <li key={`item-${index}`} className="flex items-center gap-1.5">
+                <Icon className="h-3 w-3" style={{ color }} />
+                <span>{value}</span>
+              </li>
+            )
+          })
+        }
+      </ul>
+    );
+  }
 
   return (
     <Card className="bg-card/50 border-white/10">
@@ -81,8 +104,8 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  outerRadius={100}
-                  innerRadius={60}
+                  outerRadius={80}
+                  innerRadius={50}
                   fill="#8884d8"
                   dataKey="value"
                   stroke="hsl(var(--background))"
@@ -92,10 +115,7 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Legend
-                  iconType="circle"
-                  formatter={(value) => <span className="text-foreground/80">{value}</span>}
-                />
+                <Legend content={renderLegend} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -110,3 +130,5 @@ export default function OverviewCard({ expenses, categories }: OverviewCardProps
     </Card>
   )
 }
+
+    

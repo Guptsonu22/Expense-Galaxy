@@ -1,10 +1,13 @@
 
-import type { LucideIcon } from "lucide-react";
+import type { LucideProps } from "lucide-react";
+import type { ForwardRefExoticComponent, RefAttributes } from "react";
+
+export type IconName = "UtensilsCrossed" | "PlaneTakeoff" | "Home" | "Lightbulb" | "ShoppingCart" | "Ticket" | "HeartPulse" | "Carrot" | "Car" | "Tag" | "HelpCircle";
 
 export type Category = {
   id: string;
   name: string;
-  icon: React.ComponentType; // Can be Lucide or custom
+  icon: IconName;
 };
 
 export type Expense = {
@@ -14,3 +17,5 @@ export type Expense = {
   date: Date;
   notes?: string;
 };
+
+    

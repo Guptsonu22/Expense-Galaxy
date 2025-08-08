@@ -12,27 +12,40 @@ import OverviewCard from '@/components/dashboard/OverviewCard';
 
 export default function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [categories, setCategories] = useState<Category[]>(defaultCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const storedExpenses = localStorage.getItem('expenses');
-    const storedCategories = localStorage.getItem('categories');
-    if (storedExpenses) {
-      setExpenses(JSON.parse(storedExpenses, (key, value) => {
-        if (key === 'date') return new Date(value);
-        return value;
-      }));
-    } else {
-      setExpenses(initialExpenses);
+    let storedExpenses: Expense[] = [];
+    let storedCategories: Category[] = [];
+
+    try {
+      const expensesFromStorage = localStorage.getItem('expenses');
+      if (expensesFromStorage) {
+        storedExpenses = JSON.parse(expensesFromStorage, (key, value) => {
+          if (key === 'date') return new Date(value);
+          return value;
+        });
+      }
+    } catch (error) {
+      console.error("Failed to parse expenses from localStorage", error);
     }
-    if (storedCategories) {
-      setCategories(JSON.parse(storedCategories));
-    } else {
-      setCategories(defaultCategories);
+
+    try {
+      const categoriesFromStorage = localStorage.getItem('categories');
+      if (categoriesFromStorage) {
+        storedCategories = JSON.parse(categoriesFromStorage);
+      }
+    } catch (error) {
+        console.error("Failed to parse categories from localStorage", error);
     }
+    
+    setExpenses(storedExpenses.length > 0 ? storedExpenses : initialExpenses);
+    setCategories(storedCategories.length > 0 ? storedCategories : defaultCategories);
+    
     setIsMounted(true);
   }, []);
+
 
   useEffect(() => {
     if (isMounted) {
@@ -42,10 +55,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem('categories', JSON.stringify(categories, (key, value) => {
-        if (key === 'icon') return undefined; // Don't stringify icon components
-        return value;
-      }));
+      // Don't stringify icon components
+      const categoriesToStore = categories.map(({icon, ...rest}) => rest);
+      localStorage.setItem('categories', JSON.stringify(categoriesToStore));
     }
   }, [categories, isMounted]);
 
@@ -58,8 +70,8 @@ export default function DashboardPage() {
     setExpenses(prev => prev.filter(expense => expense.id !== id));
   };
 
-  const handleAddCategory = (newCategory: Omit<Category, 'id'>) => {
-    const categoryWithId = { ...newCategory, id: crypto.randomUUID() };
+  const handleAddCategory = (newCategory: Omit<Category, 'id' | 'icon'>) => {
+    const categoryWithId: Category = { ...newCategory, id: crypto.randomUUID(), icon: 'Tag' };
     setCategories(prev => [...prev, categoryWithId]);
     return categoryWithId;
   };
@@ -103,3 +115,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

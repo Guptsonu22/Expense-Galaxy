@@ -18,10 +18,11 @@ import { Label } from "@/components/ui/label";
 import { PlusCircle, Tag } from "lucide-react";
 import type { Category } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { getLucideIcon } from "@/lib/icon-utils";
 
 type CategoryManagerProps = {
   categories: Category[];
-  onAddCategory: (category: Omit<Category, 'id' | 'icon'> & { icon: React.ComponentType }) => Category;
+  onAddCategory: (category: Omit<Category, 'id' | 'icon'>) => Category;
 };
 
 export default function CategoryManager({ categories, onAddCategory }: CategoryManagerProps) {
@@ -31,7 +32,7 @@ export default function CategoryManager({ categories, onAddCategory }: CategoryM
 
   const handleAddCategory = () => {
     if (newCategoryName.trim()) {
-      onAddCategory({ name: newCategoryName.trim(), icon: Tag });
+      onAddCategory({ name: newCategoryName.trim() });
       toast({
         title: "Category Added",
         description: `"${newCategoryName.trim()}" has been added to your categories.`,
@@ -84,15 +85,21 @@ export default function CategoryManager({ categories, onAddCategory }: CategoryM
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {categories.map((category) => (
-            <div key={category.id} className="flex items-center justify-between p-2 rounded-md hover:bg-secondary/50">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium">{category.name}</span>
+          {categories.map((category) => {
+            const Icon = getLucideIcon(category.icon);
+            return (
+              <div key={category.id} className="flex items-center justify-between p-2 rounded-md hover:bg-secondary/50">
+                <div className="flex items-center gap-3">
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">{category.name}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </CardContent>
     </Card>
   );
 }
+
+    

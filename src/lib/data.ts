@@ -1,14 +1,17 @@
 
-import { Home, Lightbulb, PlaneTakeoff, ShoppingCart, Tag, Ticket, UtensilsCrossed } from "lucide-react";
 import type { Category, Expense } from "@/types";
 
 export const defaultCategories: Category[] = [
-  { id: 'cat-1', name: 'Food', icon: UtensilsCrossed },
-  { id: 'cat-2', name: 'Travel', icon: PlaneTakeoff },
-  { id: 'cat-3', name: 'Rent', icon: Home },
-  { id: 'cat-4', name: 'Utilities', icon: Lightbulb },
-  { id: 'cat-5', name: 'Shopping', icon: ShoppingCart },
-  { id: 'cat-6', name: 'Entertainment', icon: Ticket },
+  { id: 'cat-1', name: 'Food & Drink', icon: 'UtensilsCrossed' },
+  { id: 'cat-2', name: 'Travel', icon: 'PlaneTakeoff' },
+  { id: 'cat-3', name: 'Housing', icon: 'Home' },
+  { id: 'cat-4', name: 'Bills & Utilities', icon: 'Lightbulb' },
+  { id: 'cat-5', name: 'Shopping', icon: 'ShoppingCart' },
+  { id: 'cat-6', name: 'Entertainment', icon: 'Ticket' },
+  { id: 'cat-7', name: 'Health & Wellness', icon: 'HeartPulse' },
+  { id: 'cat-8', name: 'Groceries', icon: 'Carrot' },
+  { id: 'cat-9', name: 'Transportation', icon: 'Car' },
+  { id: 'cat-10', name: 'Other', icon: 'Tag' },
 ];
 
 const today = new Date();
@@ -29,4 +32,8 @@ export const initialExpenses: Expense[] = [
   { id: 'exp-6', amount: 22.00, categoryId: 'cat-6', date: yesterday, notes: 'Movie ticket' },
   { id: 'exp-7', amount: 8.99, categoryId: 'cat-1', date: yesterday, notes: 'Morning coffee' },
   { id: 'exp-8', amount: 300.00, categoryId: 'cat-5', date: lastMonth, notes: 'New headphones' },
+  { id: 'exp-9', amount: 45.30, categoryId: 'cat-8', date: twoDaysAgo, notes: 'Weekly groceries' },
+  { id: 'exp-10', amount: 25.00, categoryId: 'cat-9', date: yesterday, notes: 'Gasoline top-up' },
 ];
+
+    
