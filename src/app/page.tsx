@@ -9,6 +9,8 @@ import CategoryManager from '@/components/dashboard/CategoryManager';
 import InsightsCard from '@/components/dashboard/InsightsCard';
 import ExpenseTable from '@/components/dashboard/ExpenseTable';
 import OverviewCard from '@/components/dashboard/OverviewCard';
+import { Github, Linkedin, Heart } from 'lucide-react';
+import Link from 'next/link';
 
 function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -112,8 +114,21 @@ function DashboardPage() {
             />
         </div>
       </main>
-      <footer className="py-6 px-4 sm:px-6 md:px-8 text-center text-muted-foreground text-sm">
-        <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
+      <footer className="py-6 px-4 sm:px-6 md:px-8 text-muted-foreground text-sm border-t border-white/10">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center gap-1">
+                Made with <Heart className="w-4 h-4 text-red-500 fill-current" /> by Sonu Kumar
+            </div>
+            <div className="flex items-center gap-4">
+                <Link href="https://github.com/Guptsonu22" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                    <Github className="h-5 w-5" />
+                </Link>
+                <Link href="https://www.linkedin.com/in/sonu-kumar-443803231/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+                    <Linkedin className="h-5 w-5" />
+                </Link>
+            </div>
+            <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
