@@ -126,8 +126,8 @@ function DashboardPage() {
                 <Link href="https://www.linkedin.com/in/sonu-kumar-443803231/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                     <Linkedin className="h-5 w-5" />
                 </Link>
+                <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
             </div>
-            <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
         </div>
       </footer>
     </div>
