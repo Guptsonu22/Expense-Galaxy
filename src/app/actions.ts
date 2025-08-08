@@ -51,5 +51,3 @@ export async function suggestCategoryAction(notes: string, categories: Category[
     return { success: false, error: 'Failed to suggest category.' };
   }
 }
-
-    
