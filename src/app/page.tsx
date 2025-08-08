@@ -117,7 +117,7 @@ function DashboardPage() {
       <footer className="py-6 px-4 sm:px-6 md:px-8 text-muted-foreground text-sm border-t border-white/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-red-500 fill-current" /> by Sonu Kumar
+                for students worldwide.
             </div>
             <div className="flex items-center gap-4">
                 <Link href="https://github.com/Guptsonu22" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
