@@ -13,6 +13,8 @@ const firebaseConfig = {
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+const auth = getAuth(app, {
+  persistence: typeof window !== 'undefined' ? undefined : undefined,
+});
 
 export { app, auth };
