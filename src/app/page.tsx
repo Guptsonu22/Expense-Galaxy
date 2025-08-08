@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { Expense, Category } from '@/types';
 import { initialExpenses, defaultCategories } from '@/lib/data';
 import Header from '@/components/dashboard/Header';
@@ -11,8 +11,14 @@ import InsightsCard from '@/components/dashboard/InsightsCard';
 import ExpenseTable from '@/components/dashboard/ExpenseTable';
 
 export default function DashboardPage() {
-  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>(defaultCategories);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setExpenses(initialExpenses);
+    setIsMounted(true);
+  }, []);
 
   const handleAddExpense = (newExpense: Omit<Expense, 'id'>) => {
     setExpenses(prev => [{ ...newExpense, id: crypto.randomUUID() }, ...prev]);
@@ -29,6 +35,7 @@ export default function DashboardPage() {
   };
 
   const currentMonthExpenses = useMemo(() => {
+    if (!isMounted) return [];
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
@@ -36,8 +43,11 @@ export default function DashboardPage() {
       const expenseDate = new Date(expense.date);
       return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
     });
-  }, [expenses]);
+  }, [expenses, isMounted]);
 
+  if (!isMounted) {
+    return null; 
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
