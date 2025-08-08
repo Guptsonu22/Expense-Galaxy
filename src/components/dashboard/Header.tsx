@@ -7,17 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ExpenseForm from './ExpenseForm';
 import type { Category, Expense } from '@/types';
-import { PlusCircle, LogOut } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { auth } from '@/lib/firebase';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { PlusCircle } from 'lucide-react';
 
 
 type HeaderProps = {
@@ -28,23 +18,9 @@ type HeaderProps = {
 
 export default function Header({ categories, onAddExpense }: HeaderProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { user } = useAuth();
 
   const handleExpenseAdded = () => {
     setIsFormOpen(false);
-  }
-
-  const handleSignOut = async () => {
-    await auth.signOut();
-  }
-
-  const getInitials = (name: string | null | undefined) => {
-    if (!name) return 'U';
-    const names = name.split(' ');
-    if (names.length > 1) {
-      return names[0][0] + names[names.length - 1][0];
-    }
-    return names[0][0];
   }
 
   return (
@@ -71,27 +47,6 @@ export default function Header({ categories, onAddExpense }: HeaderProps) {
                 <ExpenseForm categories={categories} onAddExpense={onAddExpense} onExpenseAdded={handleExpenseAdded}/>
             </DialogContent>
             </Dialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} />
-                      <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className='p-2'>
-                  <p className="font-semibold">{user?.displayName}</p>
-                  <p className="text-xs text-muted-foreground">{user?.email}</p>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
         </div>
       </div>
     </header>

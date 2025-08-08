@@ -9,7 +9,6 @@ import CategoryManager from '@/components/dashboard/CategoryManager';
 import InsightsCard from '@/components/dashboard/InsightsCard';
 import ExpenseTable from '@/components/dashboard/ExpenseTable';
 import OverviewCard from '@/components/dashboard/OverviewCard';
-import { withAuth } from '@/hooks/useAuth';
 
 function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -117,4 +116,4 @@ function DashboardPage() {
   );
 }
 
-export default withAuth(DashboardPage);
+export default DashboardPage;
