@@ -27,9 +27,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, ArrowUpDown, Trash2 } from 'lucide-react';
+import { MoreHorizontal, ArrowUpDown, Trash2, List } from 'lucide-react';
 import type { Expense, Category } from '@/types';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -50,16 +50,22 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
   const { toast } = useToast();
 
-  const categoriesMap = useMemo(() => new Map(categories.map(c => [c.id, c])), [categories]);
+  const categoriesMap = useMemo(() => {
+    const map = new Map<string, Category>();
+    categories.forEach(c => map.set(c.id, c));
+    return map;
+  }, [categories]);
 
   const sortedExpenses = useMemo(() => {
     let sortableItems = [...expenses];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        const valA = a[sortConfig.key];
+        const valB = b[sortConfig.key];
+        if (valA < valB) {
           return sortConfig.direction === 'ascending' ? -1 : 1;
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (valA > valB) {
           return sortConfig.direction === 'ascending' ? 1 : -1;
         }
         return 0;
@@ -95,15 +101,19 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
 
   return (
     <>
-      <Card>
+      <Card className="bg-card/50 border-white/10">
         <CardHeader>
-          <CardTitle className="font-headline">Your Expenses</CardTitle>
+            <div className='flex items-center gap-2'>
+                <List className="h-6 w-6 text-primary" />
+                <CardTitle className="font-headline">All Expenses</CardTitle>
+            </div>
+          <CardDescription>A detailed list of all your recorded expenses.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border border-white/10">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-white/10">
                   <TableHead>Category</TableHead>
                   <TableHead>
                     <Button variant="ghost" onClick={() => requestSort('amount')}>
@@ -125,22 +135,20 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
                 {sortedExpenses.length > 0 ? (
                   sortedExpenses.map((expense) => {
                     const category = categoriesMap.get(expense.categoryId);
-                    const CategoryIcon = category?.icon;
                     return (
-                      <TableRow key={expense.id}>
+                      <TableRow key={expense.id} className="border-white/10">
                         <TableCell>
                           {category ? (
-                             <Badge variant="outline" className="py-1">
-                              {CategoryIcon && <CategoryIcon className="h-4 w-4 mr-2" />}
+                             <Badge variant="secondary" className="py-1">
                               {category.name}
                             </Badge>
                           ) : 'Uncategorized'}
                         </TableCell>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-medium font-mono">
                           ${expense.amount.toFixed(2)}
                         </TableCell>
                         <TableCell>{format(expense.date, 'MMM d, yyyy')}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">{expense.notes}</TableCell>
+                        <TableCell className="max-w-[200px] truncate text-muted-foreground">{expense.notes}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -151,7 +159,7 @@ export default function ExpenseTable({ expenses, categories, onDeleteExpense }: 
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                className="text-destructive"
+                                className="text-destructive focus:text-destructive-foreground focus:bg-destructive"
                                 onClick={() => setExpenseToDelete(expense)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />

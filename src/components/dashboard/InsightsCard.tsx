@@ -42,17 +42,17 @@ export default function InsightsCard({ expenses }: InsightsCardProps) {
   };
 
   return (
-    <Card>
+    <Card className="bg-card/50 border-white/10">
       <CardHeader>
         <CardTitle className="font-headline flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-primary" />
-          AI-Powered Spending Insights
+          AI Spending Insights
         </CardTitle>
         <CardDescription>
-          Get an AI-generated summary of your spending for the current month.
+          Get an AI-generated summary of your spending this month.
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-h-[100px]">
+      <CardContent className="min-h-[120px]">
         {isLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-4 w-[80%]" />
@@ -67,13 +67,14 @@ export default function InsightsCard({ expenses }: InsightsCardProps) {
         ) : insights ? (
           <p className="text-sm text-foreground/80 whitespace-pre-wrap">{insights}</p>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Click the button below to generate insights on your spending habits.
-          </p>
+          <div className="text-center text-muted-foreground flex flex-col items-center justify-center h-full">
+             <p className="mt-2">No insights generated yet.</p>
+             <p>Click the button to get your personalized summary.</p>
+          </div>
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={handleGenerate} disabled={isLoading} className="w-full sm:w-auto">
+        <Button onClick={handleGenerate} disabled={isLoading || expenses.length === 0} className="w-full sm:w-auto">
           {isLoading ? (
             <>
               <Sparkles className="mr-2 h-4 w-4 animate-spin" />

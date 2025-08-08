@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -42,9 +42,12 @@ export default function CategoryManager({ categories, onAddCategory }: CategoryM
   };
 
   return (
-    <Card>
+    <Card className="bg-card/50 border-white/10">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="font-headline">Categories</CardTitle>
+        <div>
+          <CardTitle className="font-headline">Categories</CardTitle>
+          <CardDescription>Manage your expense categories.</CardDescription>
+        </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -84,8 +87,7 @@ export default function CategoryManager({ categories, onAddCategory }: CategoryM
           {categories.map((category) => (
             <div key={category.id} className="flex items-center justify-between p-2 rounded-md hover:bg-secondary/50">
               <div className="flex items-center gap-3">
-                <category.icon className="h-5 w-5 text-muted-foreground" />
-                <span className="text-sm">{category.name}</span>
+                <span className="text-sm font-medium">{category.name}</span>
               </div>
             </div>
           ))}

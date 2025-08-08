@@ -4,7 +4,7 @@ import type { LucideIcon } from "lucide-react";
 export type Category = {
   id: string;
   name: string;
-  icon: LucideIcon;
+  icon: React.ComponentType; // Can be Lucide or custom
 };
 
 export type Expense = {
