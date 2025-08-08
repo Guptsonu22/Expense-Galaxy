@@ -48,7 +48,7 @@ export default function ExpenseForm({ categories, onAddExpense }: ExpenseFormPro
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: undefined,
+      amount: "" as any,
       categoryId: "",
       date: new Date(),
       notes: "",
@@ -80,7 +80,7 @@ export default function ExpenseForm({ categories, onAddExpense }: ExpenseFormPro
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} onChange={event => field.onChange(event.target.valueAsNumber)} />
+                    <Input type="number" placeholder="0.00" {...field} onChange={event => field.onChange(event.target.valueAsNumber || '')} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
