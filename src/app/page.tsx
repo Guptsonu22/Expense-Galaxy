@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import type { Expense, Category } from '@/types';
+import type { Expense, Category, Badge } from '@/types';
 import { initialExpenses, defaultCategories } from '@/lib/data';
 import Header from '@/components/dashboard/Header';
 import CategoryManager from '@/components/dashboard/CategoryManager';
@@ -10,8 +10,37 @@ import InsightsCard from '@/components/dashboard/InsightsCard';
 import ExpenseTable from '@/components/dashboard/ExpenseTable';
 import OverviewCard from '@/components/dashboard/OverviewCard';
 import BudgetCard from '@/components/dashboard/BudgetCard';
+import AchievementsCard from '@/components/dashboard/AchievementsCard';
 import { Github, Linkedin, Heart } from 'lucide-react';
 import Link from 'next/link';
+
+const availableBadges: Omit<Badge, 'earned'>[] = [
+  {
+    id: 'badge-1',
+    name: 'Budget Hero',
+    description: "You've spent less than your budget this month. Great job!",
+    icon: 'ShieldCheck',
+  },
+  {
+    id: 'badge-2',
+    name: 'Frugal Spender',
+    description: 'Spent less than ₹500 with more than 5 expenses. Every penny counts!',
+    icon: 'PiggyBank',
+  },
+  {
+    id: 'badge-3',
+    name: 'On a Roll',
+    description: 'You logged an expense on 3 consecutive days. Keep the momentum!',
+    icon: 'Flame',
+  },
+  {
+    id: 'badge-4',
+    name: 'Master Categorizer',
+    description: 'You used at least 5 different categories this month. So organized!',
+    icon: 'Library',
+  },
+];
+
 
 function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -116,6 +145,51 @@ function DashboardPage() {
     return currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
   }, [currentMonthExpenses]);
 
+  const earnedBadges = useMemo((): Badge[] => {
+    const badges: Badge[] = [];
+    if (!isMounted) return [];
+
+    // Budget Hero
+    if (totalSpentThisMonth < budget) {
+      badges.push({ ...availableBadges[0], earned: true });
+    }
+
+    // Frugal Spender
+    if (currentMonthExpenses.length > 5 && totalSpentThisMonth < 500) {
+      badges.push({ ...availableBadges[1], earned: true });
+    }
+    
+    // On a Roll
+    const expenseDates = [...new Set(expenses.map(e => new Date(e.date).toDateString()))]
+      .map(d => new Date(d).getTime())
+      .sort((a,b) => b - a);
+
+    let consecutiveDays = 1;
+    for (let i = 0; i < expenseDates.length - 1; i++) {
+        const diff = expenseDates[i] - expenseDates[i+1];
+        if (diff === 24 * 60 * 60 * 1000) {
+            consecutiveDays++;
+        } else if (diff > 24 * 60 * 60 * 1000) {
+            break;
+        }
+    }
+    if (consecutiveDays >= 3) {
+      badges.push({ ...availableBadges[2], earned: true });
+    }
+
+    // Master Categorizer
+    const uniqueCategoriesThisMonth = new Set(currentMonthExpenses.map(e => e.categoryId));
+    if (uniqueCategoriesThisMonth.size >= 5) {
+      badges.push({ ...availableBadges[3], earned: true });
+    }
+
+    return availableBadges.map(b => {
+      const isEarned = badges.some(eb => eb.id === b.id);
+      return { ...b, earned: isEarned };
+    });
+  }, [isMounted, expenses, currentMonthExpenses, totalSpentThisMonth, budget]);
+
+
   if (!isMounted) {
     return null; 
   }
@@ -135,6 +209,7 @@ function DashboardPage() {
               totalSpent={totalSpentThisMonth}
               onSetBudget={handleSetBudget}
             />
+            <AchievementsCard badges={earnedBadges} />
             <CategoryManager categories={categories} onAddCategory={handleAddCategory} />
           </div>
         </div>
