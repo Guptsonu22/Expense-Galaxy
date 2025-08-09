@@ -222,7 +222,7 @@ function DashboardPage() {
         </div>
       </main>
       <footer className="py-6 px-4 sm:px-6 md:px-8 text-muted-foreground text-sm border-t border-white/10">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-1">
                 Made with <Heart className="h-4 w-4 text-red-500 mx-1" /> for students worldwide.
             </div>
@@ -233,8 +233,8 @@ function DashboardPage() {
                 <Link href="https://www.linkedin.com/in/sonu-kumar-443803231/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                     <Linkedin className="h-5 w-5" />
                 </Link>
-                <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
             </div>
+            <p>&copy; {new Date().getFullYear()} Expense Galaxy. All rights reserved.</p>
         </div>
       </footer>
     </div>
